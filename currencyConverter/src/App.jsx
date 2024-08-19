@@ -4,9 +4,9 @@ import { CurrencyConvertor } from './components/CurrencyConvertor'
 function App() {
 
 
-  const handleConversion = () => {
-    console.log("this will convert the currency")
-  }
+  // const handleConversion = () => {
+  //   console.log("this will convert the currency")
+  // }
 
 
   return (

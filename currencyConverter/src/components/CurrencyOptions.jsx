@@ -20,7 +20,7 @@ export const CurrencyOptions = ({currencies, currency, setCurrency, title=""}) =
             focus:outline-none focus:ring-2 focus:ring-indigo-700 '>
                 {
                     currencies.map((currency) => {
-                        console.log(currency[0])
+                       // console.log(currency[0])
                         return <option value={currency} key={currency}>
                         {currency}
                     </option>

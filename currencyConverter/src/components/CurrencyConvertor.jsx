@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { currencies } from '../currencies'
+import { currencies, apiKey } from '../currencies'
 import { CurrencyOptions } from './CurrencyOptions'
 
 export const CurrencyConvertor = () => {
@@ -13,15 +13,35 @@ export const CurrencyConvertor = () => {
 const [amount, setAmount] = useState(1)
 
 
-const [baseCurrency, setBaseCurrency] = useState(["USD"])
-const [targetCurrency, setTargetCurrency] = useState("EUR")
+const [baseCurrency, setBaseCurrency] = useState("")
+const [targetCurrency, setTargetCurrency] = useState("")
+const [result, setResult] = useState("")
 
 //currenciesList.map(item => console.log(item))
 //console.log(currencies[0])
-const currencyConvertor = () => {
+let toCurrency = baseCurrency.split(',')
+let fromCurrency = targetCurrency.split(',')
+console.log(toCurrency[0])
+console.log(targetCurrency)
+console.log(amount)
+
+const currencyConvertor = async (e) => {
+    e.preventDefault()
+
+    const res = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/pair/${toCurrency[0]}/${fromCurrency[0]}/${amount}`)
+    const data = await res.json()
+    const conversion = `${data["conversion_result"]} `
+    setResult(conversion)
+   // console.log(data["conversion_result"])
+    return conversion
 
 }
 
+
+const swapCurrency = () => {
+    setTargetCurrency(baseCurrency)
+    setBaseCurrency(targetCurrency)
+}
     return (
         <div>
              <h2 className='mb-2 text-4xl font-bold text-sky-900 '> 
@@ -31,7 +51,7 @@ const currencyConvertor = () => {
     <div className='max-w-xl mx-auto my-10 p-5 bg-slate-50  shadow-md'>
        
 {/* DROPDOWN MENUE OPTIONS */}
-        <div className='dropdown '>
+        <div className='grid grid-col-1 sm:grid-cols-3 gap-4 items-end '>
             {/* <select id='fromCurrency' name='fromCurrency' title='Convert'></select>
             <button type='button' id='switchCurrency'>Switch</button>
             <select id='toCurrency' name='toCurrency' title='Convert To'></select> */}
@@ -42,14 +62,25 @@ const currencyConvertor = () => {
           currencies={currencies}
 
           ></CurrencyOptions>
+
+            <div className='flex justify-center -mb-5 sm:mb-0'>
+                <button 
+                onClick={swapCurrency}
+                className='p-2 bg-gray-100 rounded-full cursor-pointer hover:bg-cyan-900'>
+                <p className='text-xl text-gray-700' > 🔁</p>
+                </button>
+            </div>
+
+
           <CurrencyOptions
           currencies={currencies}
-          title="To">
+          title="To"
             currency={targetCurrency}
             setCurrency={setTargetCurrency}
+            >
           </CurrencyOptions>
           
-
+          
           </div>
 
 
@@ -65,9 +96,11 @@ const currencyConvertor = () => {
             </input> 
 
             <div className='flex justify-end mt-6'>
-                <button className='px-5 py-2 bg-gray-900 text-white hover:bg-cyan-900'>Convert</button>
+                <button 
+                onClick={currencyConvertor}
+                className='px-5 py-2 bg-gray-900 text-white hover:bg-cyan-900'>Convert</button>
             </div>
-            <div className='mt-4 text-2xl font-medium text-center text-cyan-900'>Result: </div>
+            <div className='mt-4 text-2xl font-medium text-center text-cyan-900'>Result: {result}{fromCurrency[0]} </div>
           </div>
               
 
